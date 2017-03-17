@@ -1,51 +1,51 @@
-Laravel 5.2 Quickstart on OpenShift
+Laravel 5.2 Quickstart on Digital Garage
 ===================================
 [Laravel](http://laravel.com/) is a free, open source PHP web application framework, designed for the development of model–view–controller (MVC) web applications.
 
-This quickstart was created to make it easy to get started with Laravel 5.2 on OpenShift v3.
+This quickstart was created to make it easy to get started with Laravel 5.2 on Digital Garage.
 
-The simplest way to install this application is to use the OpenShift quickstart template. To install the quickstart, follow [these directions](#installation).
+The simplest way to install this application is to use the Digital Garage quickstart template. To install the quickstart, follow [these directions](#installation).
 
 ## Installation ##
 
-1. Create an account at [http://www.openshift.com/devpreview/register.html](http://www.openshift.com/devpreview/register.html)
+1. Create an account at [http://www.thedigitalgarage.io/free-signup](http://www.thedigitalgarage.io/free-signup)
 
-2. [Install the OpenShift CLI tools](https://docs.openshift.com/online/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli)
+2. [Install the Digital Garage CLI tools](https://docs.thedigitalgarage.io/getting_started/beyond_the_basics.html#btb-installing-the-openshift-cli)
 
 3. Add the Laravel template(s) to your project:
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/luciddreamz/laravel-ex/master/openshift/templates/laravel-mysql.json
+    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/laravel-mysql.json
     ```
     or
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/luciddreamz/laravel-ex/master/openshift/templates/laravel-postgresql.json
+    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/laravel-postgresql.json
     ```
     or
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/luciddreamz/laravel-ex/master/openshift/templates/laravel-sqlite.json
+    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/laravel-sqlite.json
     ```
 
 4. Fork this GitHub repo
 
-5. From the [web console](https://console.preview.openshift.com/console/), select your project, click *Add to Project*, and select the Laravel template under the PHP heading
+5. From the [web console](https://apps.thedigitalgarage.io:8443/console/), select your project, click *Add to Project*, and select the Laravel template under the PHP heading
 
 6. Replace the user name in the Git Repository URL parameter with your GitHub user name to point the template to your fork
 
 7. Scroll to the bottom of the page and click *[ Create ]* to deploy your application
 
-8. Follow [these instructions](https://docs.openshift.com/online/getting_started/basic_walkthrough.html#bw-configuring-automated-builds) to configure automated builds, allowing you to push your code to your GitHub repo and automatically trigger a new deployment
+8. Follow [these instructions](https://docs.thedigitalgarage.io/getting_started/basic_walkthrough.html#bw-configuring-automated-builds) to configure automated builds, allowing you to push your code to your GitHub repo and automatically trigger a new deployment
 
-## OpenShift Considerations ##
-These are some special considerations you may need to keep in mind when running your application on OpenShift.
+## Digital Garage Considerations ##
+These are some special considerations you may need to keep in mind when running your application on Digital Garage.
 
 ### Local vs. Remote Development ###
 This Laravel quickstart provides separate configuration files for both local and remote development. Use `.env` for local development, and `.s2i/environment` for remote development.
 
 ### Remote Development ###
-Your application is configured to automatically use an OpenShift MySQL, PostgreSQL, or SQLite database in when deployed on OpenShift using the included templates (see `openshift/templates`).
+Your application is configured to automatically use an Digital Garage MySQL, PostgreSQL, or SQLite database in when deployed on Digital Garage using the included templates (see `openshift/templates`).
 
 Additionally, your `APP_ENV`, `APP_URL`, and `APP_KEY` can be set by following the [installation](#installation) instructions with the included templates.
 
@@ -58,7 +58,7 @@ During the build process, `composer install` is automatically executed over the 
 ### 'Development' Mode ###
 By default, this Quickstart is configured in 'development' mode to make debugging your application easier.
 
-When you develop your Laravel application in OpenShift, you can also enable the 'production' environment by setting environment variables, using the `oc` client, like:
+When you develop your Laravel application in Digital Garage, you can also enable the 'production' environment by setting environment variables, using the `oc` client, like:
 
 ```
 $ oc get services
@@ -69,12 +69,12 @@ $ oc set env dc/laravel-mysql-example LARAVEL_APP_ENV=production LARAVEL_APP_DEB
 
 Next, run `oc status` to confirm that an updated deployment has been kicked off.
 
-For more information on environment variables impacting PHP behavior on OpenShift, see the [PHP 5.6 builder image](https://github.com/sclorg/s2i-php-container/tree/master/5.6#environment-variables).
+For more information on environment variables impacting PHP behavior on Digital Garage, see the [PHP 5.6 builder image](https://github.com/sclorg/s2i-php-container/tree/master/5.6#environment-variables).
 
 For more information on Laravel environment variables, see the [Laravel environment configuration documentation](https://laravel.com/docs/5.2/configuration#environment-configuration).
 
 ### Log Files ###
-Your application is configured to use the OpenShift log directory. You can use the `oc logs` command to stream the latest log file entries from your running pod:
+Your application is configured to use the Digital Garage log directory. You can use the `oc logs` command to stream the latest log file entries from your running pod:
 
 ```
 $ oc get pods
@@ -87,4 +87,4 @@ $ oc logs laravel-mysql-example-1-hj2k1
 To stop tailing the logs, press *Ctrl + c*.
 
 ## Additional Resources ##
-Documentation for the Laravel framework can be found on the [Laravel website](http://laravel.com/docs). Check out OpenShift's [Documentation](https://docs.openshift.com/online/using_images/s2i_images/php.html) for help running PHP on OpenShift.
+Documentation for the Laravel framework can be found on the [Laravel website](http://laravel.com/docs). Check out Digital Garage's [Documentation](https://docs.thedigitalgarage.io/using_images/s2i_images/php.html) for help running PHP on Digital Garage.
