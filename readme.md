@@ -15,17 +15,17 @@ The simplest way to install this application is to use the Digital Garage quicks
 3. Add the Laravel template(s) to your project:
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/laravel-mysql.json
+    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/qs-laravel-mysql.json
     ```
     or
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/laravel-postgresql.json
+    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/qs-laravel-postgresql.json
     ```
     or
 
     ```
-    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/laravel-sqlite.json
+    $ oc create -f https://raw.githubusercontent.com/thedigitalgarage/laravel-ex/master/openshift/templates/qs-laravel-sqlite.json
     ```
 
 4. Fork this GitHub repo

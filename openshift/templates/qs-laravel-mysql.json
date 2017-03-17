@@ -2,29 +2,19 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "laravel-pgsql-example",
+    "name": "qs-laravel-mysql",
     "annotations": {
-      "openshift.io/display-name": "Laravel + PostgreSQL (Persistent)",
-      "description": "An example Laravel application with a PostgreSQL database. For more information about using this template, including OpenShift considerations, see https://github.com/luciddreamz/laravel-ex/blob/master/readme.md.",
+      "openshift.io/display-name": "Laravel + MySQL (Persistent)",
+      "description": "An example Laravel application with a MySQL database. For more information about using this template, including Digital Garage considerations, see https://github.com/thedigitalgarage/laravel-ex/blob/master/readme.md.",
       "tags": "quickstart,php,laravel",
       "iconClass": "icon-laravel"
     }
   },
-  "message": "The following service(s) have been created in your project: ${NAME}, ${DATABASE_SERVICE_NAME}.\n\nFor more information about using this template, including OpenShift considerations, see https://github.com/luciddreamz/laravel-ex/blob/master/readme.md.",
+  "message": "The following service(s) have been created in your project: ${NAME}, ${DATABASE_SERVICE_NAME}.\n\nFor more information about using this template, including Digital Garage considerations, see https://github.com/thedigitalgarage/laravel-ex/blob/master/readme.md.",
   "labels": {
-    "template": "laravel-pgsql-example"
+    "template": "qs-laravel-mysql"
   },
   "objects": [{
-    "kind": "Secret",
-    "apiVersion": "v1",
-    "metadata": {
-      "name": "${NAME}"
-    },
-    "stringData" : {
-      "databaseUser" : "${DATABASE_USER}",
-      "databasePassword" : "${DATABASE_PASSWORD}"
-    }
-  }, {
     "kind": "Service",
     "apiVersion": "v1",
     "metadata": {
@@ -89,7 +79,7 @@
         "sourceStrategy": {
           "from": {
             "kind": "ImageStreamTag",
-            "namespace": "${NAMESPACE}",
+            "namespace": "openshift",
             "name": "php:7.0"
           },
           "env": [{
@@ -150,7 +140,7 @@
               "command": [
                 "./migrate-database.sh"
               ],
-              "containerName": "laravel-pgsql-example"
+              "containerName": "qs-laravel-mysql"
             }
           }
         }
@@ -160,7 +150,7 @@
         "imageChangeParams": {
           "automatic": true,
           "containerNames": [
-            "laravel-pgsql-example"
+            "qs-laravel-mysql"
           ],
           "from": {
             "kind": "ImageStreamTag",
@@ -183,7 +173,7 @@
         },
         "spec": {
           "containers": [{
-            "name": "laravel-pgsql-example",
+            "name": "qs-laravel-mysql",
             "image": "${NAME}",
             "ports": [{
               "containerPort": 8080
@@ -205,12 +195,6 @@
               }
             },
             "env": [{
-              "name": "CLUSTER_NAME",
-              "value": "${CLUSTER_NAME}"
-            }, {
-              "name": "ROUTER_SHARD",
-              "value": "${ROUTER_SHARD}"
-            }, {
               "name": "DB_SERVICE_NAME",
               "value": "${DATABASE_SERVICE_NAME}"
             }, {
@@ -258,9 +242,9 @@
     },
     "spec": {
       "ports": [{
-        "name": "postgresql",
-        "port": 5432,
-        "targetPort": 5432
+        "name": "mysql",
+        "port": 3306,
+        "targetPort": 3306
       }],
       "selector": {
         "name": "${DATABASE_SERVICE_NAME}"
@@ -284,12 +268,12 @@
         "imageChangeParams": {
           "automatic": true,
           "containerNames": [
-            "postgresql"
+            "mysql"
           ],
           "from": {
             "kind": "ImageStreamTag",
-            "namespace": "${NAMESPACE}",
-            "name": "postgresql:9.5"
+            "namespace": "openshift",
+            "name": "mysql:5.7"
           }
         }
       }, {
@@ -308,48 +292,43 @@
         },
         "spec": {
           "containers": [{
-            "name": "postgresql",
-            "image": "postgresql",
+            "name": "mysql",
+            "image": "mysql",
             "ports": [{
-              "containerPort": 5432
+              "containerPort": 3306
             }],
             "readinessProbe": {
               "timeoutSeconds": 1,
               "initialDelaySeconds": 5,
               "exec": {
-                "command": [ "/bin/sh", "-i", "-c", "psql -h 127.0.0.1 -U ${DATABASE_USER} -q -d ${DATABASE_NAME} -c 'SELECT 1'"]
+                "command": ["/bin/sh", "-i", "-c", "MYSQL_PWD='${DATABASE_PASSWORD}' mysql -h 127.0.0.1 -u ${DATABASE_USER} -D ${DATABASE_NAME} -e 'SELECT 1'"]
               }
             },
             "livenessProbe": {
               "timeoutSeconds": 1,
               "initialDelaySeconds": 30,
               "tcpSocket": {
-                "port": 5432
+                "port": 3306
               }
             },
             "env": [{
-              "name": "POSTGRESQL_USER",
-              "valueFrom": {
-                "secretKeyRef" : {
-                  "name" : "${NAME}",
-                  "key" : "databaseUser"
-                }
-              }
+              "name": "MYSQL_USER",
+              "value": "${DATABASE_USER}"
             }, {
-              "name": "POSTGRESQL_PASSWORD",
+              "name": "MYSQL_PASSWORD",
               "value": "${DATABASE_PASSWORD}"
             }, {
-              "name": "POSTGRESQL_DATABASE",
+              "name": "MYSQL_DATABASE",
               "value": "${DATABASE_NAME}"
             }],
             "resources": {
               "limits": {
-                "memory": "${MEMORY_POSTGRESQL_LIMIT}"
+                "memory": "${MEMORY_MYSQL_LIMIT}"
               }
             },
             "volumeMounts": [{
               "name": "${DATABASE_SERVICE_NAME}-data",
-              "mountPath": "/var/lib/pgsql/data"
+              "mountPath": "/var/lib/mysql/data"
             }]
           }],
           "volumes": [{
@@ -367,18 +346,17 @@
     "displayName": "Name",
     "description": "The name assigned to all of the frontend objects defined in this template.",
     "required": true,
-    "value": "laravel-pgsql-example"
+    "value": "qs-laravel-mysql"
   }, {
-    "name": "NAMESPACE",
-    "displayName": "Namespace",
-    "description": "The OpenShift Namespace where the ImageStream resides.",
-    "required": true,
-    "value": "openshift"
+    "name": "APPLICATION_DOMAIN",
+    "displayName": "Application Hostname",
+    "description": "The exposed hostname that will route to the Laravel service, if left blank a value will be defaulted.",
+    "value": ""
   }, {
     "name": "SOURCE_REPOSITORY_URL",
     "displayName": "Git Repository URL",
     "description": "The URL of the repository with your application source code.",
-    "value": "https://github.com/luciddreamz/laravel-ex.git",
+    "value": "https://github.com/thedigitalgarage/laravel-ex.git",
     "required": true
   }, {
     "name": "SOURCE_REPOSITORY_REF",
@@ -407,44 +385,15 @@
     "description": "The custom Composer mirror URL",
     "value": ""
   }, {
-    "displayName": "Cluster Name",
-    "name": "CLUSTER_NAME",
-    "description": "The name of your current OpenShift cluster (console.CLUSTER_NAME.openshift.com).",
-    "value": "preview",
-    "required": true
-  }, {
-    "displayName": "Router Shard",
-    "name": "ROUTER_SHARD",
-    "description": "The router shard used by routes in your current OpenShift cluster (http://PROJECT_NAME-APPLICATION_NAME.ROUTER_SHARD.CLUSTER_NAME.openshiftapps.com/).",
-    "value": "44fs",
-    "required": true
-  }, {
     "name": "MEMORY_LIMIT",
     "displayName": "Memory Limit",
     "description": "Maximum amount of memory the Laravel container can use.",
-    "value": "512Mi",
-    "required": true
-  }, {
-    "name": "MEMORY_POSTGRESQL_LIMIT",
-    "displayName": "Memory Limit (PostgreSQL)",
-    "description": "Maximum amount of memory the PostgreSQL container can use.",
-    "value": "512Mi",
-    "required": true
-  }, {
-    "name": "VOLUME_CAPACITY",
-    "displayName": "Volume Capacity",
-    "description": "Volume space available for data, e.g. 512Mi, 2Gi",
-    "value": "1Gi",
+    "value": "192Mi",
     "required": true
   }, {
     "name": "CONTEXT_DIR",
     "displayName": "Context Directory",
     "description": "Set this to the relative path to your project if it is not in the root of your repository."
-  }, {
-    "name": "APPLICATION_DOMAIN",
-    "displayName": "Application Hostname",
-    "description": "The exposed hostname that will route to the Laravel service, if left blank a value will be defaulted.",
-    "value": ""
   }, {
     "name": "GITHUB_WEBHOOK_SECRET",
     "displayName": "GitHub Webhook Secret",
@@ -454,13 +403,13 @@
   }, {
     "name": "DATABASE_SERVICE_NAME",
     "displayName": "Database Service Name",
-    "value": "postgresql",
+    "value": "mysql",
     "required": true
   }, {
     "name": "DATABASE_ENGINE",
     "displayName": "Database Engine",
-    "description": "Database engine: mysql, pgsql (default), or sqlite.",
-    "value": "pgsql",
+    "description": "Database engine: mysql (default), pgsql, or sqlite.",
+    "value": "mysql",
     "required": true
   }, {
     "name": "DATABASE_NAME",
@@ -477,6 +426,18 @@
     "displayName": "Database Password",
     "generate": "expression",
     "from": "[a-zA-Z0-9]{16}"
+  }, {
+    "name": "MEMORY_MYSQL_LIMIT",
+    "displayName": "Memory Limit (MySQL)",
+    "description": "Maximum amount of memory the MySQL container can use.",
+    "value": "192Mi",
+    "required": true
+  }, {
+    "name": "VOLUME_CAPACITY",
+    "displayName": "Volume Capacity",
+    "description": "Volume space available for data, e.g. 512Mi, 2Gi",
+    "value": "1Gi",
+    "required": true
   }, {
     "name": "LARAVEL_APP_KEY",
     "displayName": "Laravel Encryption Key",
