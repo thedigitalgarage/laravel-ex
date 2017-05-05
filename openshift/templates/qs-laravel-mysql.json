@@ -4,7 +4,7 @@
   "metadata": {
     "name": "qs-laravel-mysql",
     "annotations": {
-      "openshift.io/display-name": "Laravel + MySQL (Persistent)",
+      "openshift.io/display-name": "Laravel + MySQL (Ephemeral)",
       "description": "An example Laravel application with a MySQL database. For more information about using this template, including Digital Garage considerations, see https://github.com/thedigitalgarage/laravel-ex/blob/master/readme.md.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
       "tags": "quickstart,php,laravel",
       "iconClass": "icon-laravel"
