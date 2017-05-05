@@ -65,6 +65,17 @@
       }
     },
     "spec": {
+      "completionDeadlineSeconds": 900,
+      "resources": {
+          "limits": {
+              "cpu": "300m",
+              "memory": "512Mi"
+          },
+          "requests": {
+              "cpu": "300m",
+              "memory": "512Mi"
+          }
+      },
       "source": {
         "type": "Git",
         "git": {
@@ -114,6 +125,7 @@
       }
     },
     "spec": {
+      "activeDeadlineSeconds": 300,
       "strategy": {
         "type": "Rolling",
         "recreateParams": {
@@ -155,6 +167,7 @@
           }
         },
         "spec": {
+          "activeDeadlineSeconds": null,
           "containers": [{
             "name": "qs-laravel-sqlite",
             "image": "${NAME}",
